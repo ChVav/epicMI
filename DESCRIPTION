@@ -1,0 +1,15 @@
+Package: epicMI
+Type: Package
+Title: Estimate unreliability and MI scores for Infinium type II probes
+Version: 0.1.0
+Author: Tatiana Nazarenko, Charlotte Vavourakis
+Maintainer: Charlotte Vavourakis <charlottevavourakis@gmail.com>
+Description: Estimate unreliability and MI scores for Infinium type II probes on the Illumina MethylationEPIC microarray v1.0, either using detP values or probes on the Y chromosome.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+LazyDataCompression: bzip2
+Depends: 
+    minfi (>= 1.42.0),
+    stringr (>= 1.4.0),
+    stats
