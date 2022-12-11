@@ -25,5 +25,5 @@ devtools::install_github("ChVav/epicMI")
 
 ``` r
 library(epicMI)
-out <- main_unreliability_MI(probesII_EPICv1, RGset)
+out <- unreliability_MI_typeII(probesII_EPICv1, RGset)
 ```
