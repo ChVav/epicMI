@@ -77,7 +77,7 @@ or for *Y-noise* method:
 ``` r
 out <- unreliability_MI(subset(probesII_EPICv1,probesII_EPICv1$removed_to_EPICv2 == 0), RGset, noise_set="Y").
 ```
-We additionaly show, that all 4 options (using *p-noise* and *Y-noise* on probesII_EPICv1 or only on not removed probes work pretty simillar:
+We additionaly show, that all 4 options (using *p-noise* and *Y-noise* on probesII_EPICv1 or only on not removed probes work pretty simillar in terms of dependence of estimated unreliability and MI of probes :
 <img src="data/fig/unreliability_vs_MI.png" width="700"/>
 ### Probes I Type
 This method, can be used for calculation on probes I Type, just by changing (in examples above) data frame **probesII_EPICv1** to data frame **probesI_EPICv1** (which will also loaded with package) or own data frame of probes I Type, which should have the same structure and at least have *'probe'* column (name of probes) and *'CHR'* column (with chromosome annotation). 
