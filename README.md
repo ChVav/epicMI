@@ -6,7 +6,7 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The function evaluates unreliability and calculates MI values based on "noise" probes, which can be selected in two ways:
+The  *unreliability_MI* function estimates unreliability and calculates MI values based on "noise" probes, which can be selected in two ways:
 
 Estimate unreliability and calculate MI scores for Infinium type II probes on the
 Illumina MethylationEPIC microarray v1.0, based on "noise" probes, which can be selected in two ways:
