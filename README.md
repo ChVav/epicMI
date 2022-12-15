@@ -26,6 +26,12 @@ devtools::install_github("ChVav/epicMI")
 
 
 ## Example
+Loading package and preparing RGset:
+
+``` r
+library(epicMI)
+RGset <- read.metharray.exp(targets)
+```
 
 ### *p-noise* method 
 By default, *unreliability_MI* function estimate unreliability and calculate MI scores on all samples, using *p-noise* method:
