@@ -81,5 +81,8 @@ We additionaly show, that all 4 options (using *p-noise* and *Y-noise* on probes
 <img src="data/fig/unreliability_vs_MI.png" width="700"/>
 ### Probes I Type
 This method, can be used for calculation on probes I Type, just by changing (in examples above) data frame **probesII_EPICv1** to data frame **probesI_EPICv1** (which will also loaded with package) or own data frame of probes I Type, which should have the same structure and at least have *'probe'* column (name of probes) and *'CHR'* column (with chromosome annotation). 
+As shown on figure below the unreliability scores calculated by different option on probes I Type not quite robust, therefore we recommend use only MI and apply the same threshold by it, which was found on probes II type.
+
+<img src="data/fig/unreliability_vs_MI_probesI.png" width="700"/>
 
 
