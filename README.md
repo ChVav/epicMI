@@ -33,7 +33,7 @@ library(epicMI)
 RGset <- read.metharray.exp(targets)
 ```
 
-### *p-noise* method 
+### *p-noise* method on probes II Type
 By default, *unreliability_MI* function estimate unreliability and calculate MI scores on all samples, using *p-noise* method:
 ``` r
 library(epicMI)
@@ -54,7 +54,7 @@ out <- unreliability_MI(probesII_EPICv1, RGset, noise_set="p", samples),
 ```
 where samples names should be the same as in RGset.
 
-### *Y-noise* method 
+### *Y-noise* method on probes II Type
 
 For using *Y-noise* method here are 2 options to run *unreliability_MI* function:
 ``` r
@@ -66,3 +66,8 @@ or
 out <- unreliability_MI(probesII_EPICv1, RGset, noise_set="Y", samples),
 ```
 where samples names should be the same as in RGset and should be only female samples.
+
+### Probes I Type
+This method, can be used for calculation on probes I Type, just by changing (in examples above) data frame **probesII_EPICv1** to data frame **probesI_EPICv1** (which will also loaded with package) or own data frame of probes I Type, which should have the same structure and at least have *'probe'* column (name of probes) and *'CHR'* column (with chromosome annotation). 
+
+
