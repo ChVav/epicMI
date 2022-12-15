@@ -67,6 +67,18 @@ out <- unreliability_MI(probesII_EPICv1, RGset, noise_set="Y", samples),
 ```
 where samples names should be the same as in RGset and should be only female samples.
 
+### Calculation only on probes wchih were not removed to EPIC microarray v2.0
+These probes can be selected from data frame **probesII_EPICv1** by *'removed_to_EPICv2'* column:
+For example, for *p-noise* method:
+``` r
+out <- unreliability_MI(subset(probesII_EPICv1,probesII_EPICv1$removed_to_EPICv2 == 0), RGset, noise_set="p")
+```
+or for *Y-noise* method:
+``` r
+out <- unreliability_MI(subset(probesII_EPICv1,probesII_EPICv1$removed_to_EPICv2 == 0), RGset, noise_set="Y").
+```
+We additionaly show, that all 4 options (using *p-noise* and *Y-noise* on probesII_EPICv1 or only on not removed probes work pretty simillar:
+
 ### Probes I Type
 This method, can be used for calculation on probes I Type, just by changing (in examples above) data frame **probesII_EPICv1** to data frame **probesI_EPICv1** (which will also loaded with package) or own data frame of probes I Type, which should have the same structure and at least have *'probe'* column (name of probes) and *'CHR'* column (with chromosome annotation). 
 
