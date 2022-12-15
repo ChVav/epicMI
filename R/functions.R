@@ -97,7 +97,7 @@ unreliability_calculation <- function(Noise_matrix, samples,GREEN, RED,probes,be
   return(mrel[tII])
 }
 
-main_unreliability_MI <- function(probes, RGset, noise_set,samples) {
+unreliability_MI <- function(probes, RGset, noise_set,samples) {
   
   if (!requireNamespace("minfi", quietly = TRUE)) {
     stop(
