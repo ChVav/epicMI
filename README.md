@@ -24,7 +24,10 @@ if(!require(devtools)) install.packages("devtools")
 devtools::install_github("ChVav/epicMI")
 ```
 
+
 ## Example
+
+### *p-noise* method 
 By default, *unreliability_MI* function estimate unreliability and calculate MI scores on all samples, using *p-noise* method:
 ``` r
 library(epicMI)
@@ -36,3 +39,7 @@ For using own set of probes (for example on for estimation of different version 
 Additionaly, we added column *'removed_to_EPICv2'* where "1" indicated that probe of EPIC microarray v1.0 was removed to EPIC microarray v2.0
 
 
+``` r
+library(epicMI)
+out <- unreliability_MI(probesII_EPICv1, RGset)
+```
