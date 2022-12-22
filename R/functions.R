@@ -54,6 +54,13 @@ unreliability_calculation <- function(Noise_matrix, samples,GREEN, RED,probes,be
     )
   }
   
+    if (length(intersect(samples, colnames(GREEN))) == 0) {
+    stop(
+      str_c("ERROR: loaded samples (",samples[0],", ",samples[1],", ",samples[2],", ..." ,") do not match by names 
+with GREEN and RED arrays columns (",colnames(GREEN)[0],",v",colnames(GREEN)[1],",v",colnames(GREEN)[2]," ..." ,")"),
+      call. = FALSE
+    )}
+  
   noiseG <- subset(Noise_matrix, Noise_matrix$type =="green")
   noiseR <- subset(Noise_matrix, Noise_matrix$type =="red")
   
@@ -115,14 +122,7 @@ unreliability_MI <- function(probes, RGset, noise_set,samples) {
 
   if(missing(samples)) {
   samples <- colnames(GREEN)
-} else {
-  if (length(intersect(samples, colnames(GREEN))) == 0) {
-    stop(
-      str_c("ERROR: loaded samples (",samples[0],", ",samples[1],", ",samples[2],", ..." ,") do not match by names 
-with GREEN and RED arrays columns (",colnames(GREEN)[0],",v",colnames(GREEN)[1],",v",colnames(GREEN)[2]," ..." ,")"),
-      call. = FALSE
-    )}
-}
+} 
   
   if(missing(noise_set)) {
     noise_set <- "p"
