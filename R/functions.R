@@ -115,7 +115,16 @@ unreliability_MI <- function(probes, RGset, noise_set,samples) {
 
   if(missing(samples)) {
     samples <- colnames(GREEN)
-  } 
+  } else {
+    if length(intersect(samples, colnames(GREEN))) == 0 {
+          stop(
+     str_c("ERROR: loaded samples (",samples[0],", ",samples[1],", ",samples[2],", ..." ,") do not match by names 
+with GREEN and RED arrays columns (",colnames(GREEN)[0],",v",colnames(GREEN)[1],",v",colnames(GREEN)[2]," ..." ,")"),
+      call. = FALSE
+    )
+      }
+    break
+  }
   
   if(missing(noise_set)) {
     noise_set <- "p"
@@ -133,9 +142,21 @@ unreliability_MI <- function(probes, RGset, noise_set,samples) {
       countp_001 <- apply(PVAL_V2[,paste0("X",samples)],1,function(x) sum(x>0.01)/length(x))
       NOISE_PROBES <- intersect(names(countp_001[countp_001>=0.5]), as.vector(probes$probe))
     } else {
-      print("Please, select CORRECT method of noise probes selection: p -- by p-value; Y -- by Y chromosomes probes (applicable only for female samples)")
+          stop(
+      "ERROR: Please, select CORRECT method of noise probes selection: p -- by p-value; Y -- by Y chromosomes probes (applicable only for female samples)",
+      call. = FALSE
+    )
     }
   }
+  if (length(NOISE_PROBES) == 0) {
+              stop(
+      "ERROR: 0 noise probes were detect. Please, check you probes data frame (it should contain the maximum possible set of probes of the used array.)",
+      call. = FALSE
+    )
+    } else {
+    print(str_c(length(NOISE_PROBES)," probes will be used for noise estimation")) 
+    }
+                   
 
   NOISE_PROBES <- intersect(NOISE_PROBES, as.vector(probes$probe))
   NOISE_PROBES_df <- probes[NOISE_PROBES,]
