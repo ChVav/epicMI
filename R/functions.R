@@ -141,19 +141,17 @@ unreliability_MI <- function(probes, RGset, noise_set,samples) {
     )
     }
   }
-  print("!!!")                        
-  print(length(intersect(samples, colnames(GREEN))))
+
                           
   if (length(intersect(samples, colnames(GREEN))) == 0) {
     stop(
-      str_c("Loaded samples (",samples[0],", ",samples[1],", ",samples[2],", ..." ,") do not match by names 
-with GREEN and RED arrays columns (",colnames(GREEN)[0],",v",colnames(GREEN)[1],",v",colnames(GREEN)[2]," ..." ,")"),
+      "Loaded samples do not match by names with GREEN and RED arrays column names",
       call. = FALSE
     )} 
         
   if (length(NOISE_PROBES) == 0) {
               stop(
-      "0 noise probes were detect. Please, check you probes data frame (it should contain the maximum possible set of probes of the used array.)",
+      "0 noise probes were detect. Please, check you probes data frame (it should contain the maximum possible set of probes of the used array).",
       call. = FALSE
     )
     } else {
