@@ -142,7 +142,8 @@ unreliability_MI <- function(probes, RGset, noise_set,samples) {
     }
   }
                           
-  print(intersect(samples, colnames(GREEN))                     
+  print(intersect(samples, colnames(GREEN)))
+                          
   if (length(intersect(samples, colnames(GREEN))) == 0) {
     stop(
       str_c("ERROR: loaded samples (",samples[0],", ",samples[1],", ",samples[2],", ..." ,") do not match by names 
