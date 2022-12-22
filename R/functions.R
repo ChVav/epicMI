@@ -142,7 +142,7 @@ unreliability_MI <- function(probes, RGset, noise_set,samples) {
     }
   }
   print("!!!")                        
-  print(length(intersect(samples, colnames(GREEN)))
+  print(length(intersect(samples, colnames(GREEN))))
                           
   if (length(intersect(samples, colnames(GREEN))) == 0) {
     stop(
