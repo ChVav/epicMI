@@ -116,7 +116,7 @@ unreliability_MI <- function(probes, RGset, noise_set,samples) {
   if(missing(samples)) {
     samples <- colnames(GREEN)
   } else {
-    if length(intersect(samples, colnames(GREEN))) == 0 {
+    if (length(intersect(samples, colnames(GREEN))) == 0) {
           stop(
      str_c("ERROR: loaded samples (",samples[0],", ",samples[1],", ",samples[2],", ..." ,") do not match by names 
 with GREEN and RED arrays columns (",colnames(GREEN)[0],",v",colnames(GREEN)[1],",v",colnames(GREEN)[2]," ..." ,")"),
