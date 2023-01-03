@@ -6,9 +6,7 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The  *unreliability_MI* function estimates unreliability and calculates MI values based on "noise" probes, which can be selected in two ways:
-
-Estimate unreliability and calculate MI scores for Infinium type II probes on the
+Using the *unreliability_MI* function, estimate unreliability and calculate MI scores for Infinium type II probes on the
 Illumina MethylationEPIC microarray v1.0, based on "noise" probes, which can be selected in two ways:
 - *p-noise* method - probes, which are failed (p-value > 0.01) on 50% samples, where p-values calculated by *detectionP* function (**minfi** package) 
 - *Y-noise* method - probes on the Y chromosome (for using only on female samples).
