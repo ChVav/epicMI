@@ -132,7 +132,13 @@ unreliability_MI <- function(probes, RGset, noise_set,samples) {
       print("p-value calculating...")
       detP_rgset <- minfi::detectionP(RGset, type = "m+u")
       PVAL_V2 <- data.frame(detP_rgset)
-      countp_001 <- apply(PVAL_V2[,paste0("X",samples)],1,function(x) sum(x>0.01)/length(x))
+      if(length(intersect(samples, colnames(PVAL_V2))) != 0) {
+        countp_001 <- apply(PVAL_V2[,samples],1,function(x) sum(x>0.01)/length(x))
+      } 
+      if(length(intersect(paste0("X",samples), colnames(PVAL_V2))) != 0) {
+        countp_001 <- apply(PVAL_V2[,paste0("X",samples)],1,function(x) sum(x>0.01)/length(x))
+      } 
+      #countp_001 <- apply(PVAL_V2[,paste0("X",samples)],1,function(x) sum(x>0.01)/length(x))
       NOISE_PROBES <- intersect(names(countp_001[countp_001>=0.5]), as.vector(probes$probe))
     } else {
           stop(
