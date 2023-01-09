@@ -100,6 +100,7 @@ unreliability_calculation <- function(Noise_matrix, samples,GREEN, RED,probes,be
 }
 
 unreliability_MI <- function(probes, RGset, noise_set,samples) {
+  rownames(probes) <- probes$probe
   
   if (!requireNamespace("minfi", quietly = TRUE)) {
     stop(
