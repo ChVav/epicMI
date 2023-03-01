@@ -89,7 +89,7 @@ unreliability_calculation <- function(noise_matrix, samples,green_array, red_arr
   return(probes_unreliability)
 }
 
-unreliability_MI <- function(probes, RGset, noise_set,samples, grid_max_intenisty, grid_step, number_beta_generated) {
+unreliability_MI <- function(probes, RGset, noise_set="p", samples, grid_max_intenisty = 5000, grid_step = 100, number_beta_generated = 1000) {
   rownames(probes) <- probes$probe
 
   if (!requireNamespace("minfi", quietly = TRUE)) {
@@ -109,10 +109,6 @@ unreliability_MI <- function(probes, RGset, noise_set,samples, grid_max_intenist
   if(missing(samples)) {
   samples <- colnames(green_array)
 }
-
-  if(missing(noise_set)) {
-    noise_set <- "p"
-  }
 
   now <- Sys.time()
   print("Start...")
