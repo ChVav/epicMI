@@ -2,25 +2,23 @@ load("./data/probesII_EPICv1.RData")
 load("./data/probesI_EPICv1.RData")
 
 
-unreliability_map_estimation <- function(noise_matrix) {
+unreliability_map_estimation <- function(noise_matrix, grid_max_intenisty, grid_step, number_beta_generated) {
   noise_green <- subset(noise_matrix, noise_matrix$type =="green")
   noise_red <- subset(noise_matrix, noise_matrix$type =="red")
 
-  N = 1000
-  red_grid <- seq(0,5000, 100)
-  green_grid <- seq(0,5000, 100)
-  beta_generator <- data.frame()
-  green_generator <- data.frame()
-  red_generator <- data.frame()
+  red_grid <- seq(0,grid_max_intenisty, grid_step)
+  green_grid <- seq(0,grid_max_intenisty, grid_step)
 
   print("Unreliability Map calculation:")
-
   print("Beta generation...")
+
+  beta_generator <- data.frame()
+
   for(i in 1:length(red_grid)) {
     for(j in 1:length(green_grid)) {
       red = red_grid[i]
       green = green_grid[j]
-      noise_number <- sample(1:nrow(noise_green), N)
+      noise_number <- sample(1:nrow(noise_green), number_beta_generated)
       noised_green = noise_green[noise_number,]$noise + green
       noised_red = noise_red[noise_number,]$noise + red
       beta_temp <- (noised_green)/(noised_green + noised_red)
@@ -46,7 +44,7 @@ unreliability_map_estimation <- function(noise_matrix) {
 
 
 
-unreliability_calculation <- function(noise_matrix, samples,green_array, red_array,probes,unreliability_map) {
+unreliability_calculation <- function(noise_matrix, samples,green_array, red_array,probes,unreliability_map, grid_max_intenisty, grid_step) {
 
   if (!requireNamespace("stringr", quietly = TRUE)) {
     stop(
@@ -62,8 +60,7 @@ unreliability_calculation <- function(noise_matrix, samples,green_array, red_arr
 
   unreliability_array <-data.frame(cg = probes_names)
 
-  Nsteps = 51
-  step=100
+  n_steps = length(seq(0,grid_max_intenisty, grid_step))
 
   for(i in 1:length(samples)) {
     print(stringr::str_c("sample ",i,"/",length(samples)))
@@ -74,12 +71,12 @@ unreliability_calculation <- function(noise_matrix, samples,green_array, red_arr
     sample_probes_array$green = as.vector(t(green_array[probes_names, sample]))
     sample_probes_array$red = as.vector(t(red_array[probes_names, sample]))
 
-    sub_sample_probes_array <- subset(sample_probes_array, sample_probes_array$green < 5000 & sample_probes_array$red < 5000)
+    sub_sample_probes_array <- subset(sample_probes_array, sample_probes_array$green < grid_max_intenisty & sample_probes_array$red < grid_max_intenisty)
 
     sample_red_adjusted_on_noise <- ifelse(sub_sample_probes_array$red - mean_red_noise <0,0,sub_sample_probes_array$red - mean_red_noise)
     sample_green_adjusted_on_noise <- ifelse(sub_sample_probes_array$green - mean_green_noise <0,0,sub_sample_probes_array$green - mean_green_noise)
 
-    ureliability_map_closest_cell_number = (sample_red_adjusted_on_noise%/%step)*Nsteps + (sample_green_adjusted_on_noise%/%step) + 1
+    ureliability_map_closest_cell_number = (sample_red_adjusted_on_noise%/%grid_step)*n_steps + (sample_green_adjusted_on_noise%/%grid_step) + 1
     sample_probes_array$q <- 0
     sample_probes_array[rownames(s), ]$q <- unreliability_map[ureliability_map_closest_cell_number,]$q
     unreliability_array <- cbind(unreliability_array, sample_probes_array$q)
@@ -92,7 +89,7 @@ unreliability_calculation <- function(noise_matrix, samples,green_array, red_arr
   return(probes_unreliability)
 }
 
-unreliability_MI <- function(probes, RGset, noise_set,samples) {
+unreliability_MI <- function(probes, RGset, noise_set,samples, grid_max_intenisty, grid_step, number_beta_generated) {
   rownames(probes) <- probes$probe
 
   if (!requireNamespace("minfi", quietly = TRUE)) {
@@ -177,9 +174,9 @@ unreliability_MI <- function(probes, RGset, noise_set,samples) {
     noise_matrix <- rbind(noise_matrix, temp)
   }
 
-  unreliability_map <- unreliability_map_estimation(noise_matrix)
+  unreliability_map <- unreliability_map_estimation(noise_matrix, grid_max_intenisty, grid_step, number_beta_generated)
   print("Unreliability calculation for all data...")
-  unreliability <- unreliability_calculation(noise_matrix, samples,green_array, red_array,probes,unreliability_map)
+  unreliability <- unreliability_calculation(noise_matrix, samples,green_array, red_array,probes,unreliability_map,grid_max_intenisty, grid_step)
 
   probes$unreliability <- unreliability
   print("MI calculating...")
