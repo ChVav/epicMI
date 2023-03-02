@@ -1,6 +1,6 @@
 Package: epicMI
 Type: Package
-Title: Estimate unreliability and MI scores for Infinium type II probes
+Title: Estimate unreliability and MI scores for Infinium probes
 Version: 0.1.0
 Author: Tatiana Nazarenko, Charlotte Vavourakis
 Maintainer: Charlotte Vavourakis <charlottevavourakis@gmail.com>
