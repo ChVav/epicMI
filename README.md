@@ -35,7 +35,8 @@ RGset <- read.metharray.exp(targets)
 out <- unreliability_MI(probes, RGset, noise_set,samples, grid_max_intenisty, grid_step, number_beta_generated)
 ```
 
-By default, *unreliability_MI* function estimate unreliability and calculate MI scores on all samples, using *p-noise* method, with *'grid_max_intenisty*' = 5000, *'grid_step*' = 100 and *'number_beta_generated*' = 1000:
+By default, *unreliability_MI* function estimate unreliability and calculate MI scores on all samples, using *p-noise* method, with estimation on Reliability Map grid: green(0,*'grid_max_intenisty'*) x red(0,*'grid_max_intenisty'*) (where by default *'grid_max_intenisty'* = 5000), 
+with *'grid_step'* = 100 and *'number_beta_generated*' = 1000:
 
 ``` r
 out <- unreliability_MI(probesII_EPICv1, RGset)
