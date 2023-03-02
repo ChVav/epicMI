@@ -215,7 +215,7 @@ unreliability_calculation <- function(noise_matrix, samples,green_array, red_arr
     unreliability_array <- cbind(unreliability_array, sample_probes_array$q)
 
   }
-  colnames(real_pat) <- c("cg", samples)
+  colnames(unreliability_array) <- c("cg", samples)
   rownames(unreliability_array) <- probes_names
 
   probes_unreliability<- apply(unreliability_array[2:ncol(unreliability_array)], 1, function(x) mean(x, na.rm=T))
