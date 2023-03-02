@@ -1,7 +1,7 @@
 \name{unreliability_MI}
 \alias{unreliability_MI}
 \title{Unreliability estimation and normalized mean intensities (MI) scores calculation 
-  for Infinium type II probes on the Illumina MethylationEPIC microarray v1.0}
+  for Infinium probes on the Illumina MethylationEPIC microarray v1.0}
 
 \description{
   Method for estimating probes 'unreliability' scores by simulating the beta-value
@@ -11,7 +11,7 @@
   (which is also calculated within a given function).
 }
 \usage{
-  unreliability_MI(probesII, RGset, noise_set,samples)
+  unreliability_MI(probes, RGset, noise_set,samples, grid_max_intenisty, grid_step, number_beta_generated)
 }
 \arguments{
   \item{probes}{A dataframe of type II or type I probes (of specific version of Illumina
@@ -19,9 +19,8 @@
     - 'probe' column (name of probes);
     - 'CHR' column (with chromosome annotation).
     
-    In package embedded probesII_EPICv1 dataframe (for type II probes of Illumina
-    MethylationEPIC BeadChip v1.0) and probesI_EPICv1 dataframe (for type I probes
-    of Illumina MethylationEPIC BeadChip v1.0). These dataframes also have additional
+    In package embedded probesII_EPICv1 dataframe (for type II probes) and probesI_EPICv1 dataframe (for type I probes) of Illumina
+    MethylationEPIC BeadChip v1.0). These dataframes also have additional
     column 'removed_to_EPICv2', where "1" - indicated that probe of Illumina
     MethylationEPIC BeadChip v1.0 was removed to Illumina MethylationEPIC BeadChip v2.0,
     and "0" - was not.}
