@@ -69,7 +69,7 @@ out <- unreliability_MI(probesII_EPICv1, RGset, noise_set="Y", samples = female_
 ```
 where samples names should be the same as in RGset and should be only female samples.
 
-### Calculation only on probes wchih were not removed to EPIC microarray v2.0
+### Calculation only on probes which were not removed to EPIC microarray v2.0
 These probes can be selected from data frame **probesII_EPICv1** by *'removed_to_EPICv2'* column:
 For example, for *p-noise* method:
 ``` r
