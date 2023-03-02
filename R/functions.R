@@ -3,7 +3,7 @@ load("./data/probesI_EPICv1.RData")
 
 #' @title
 #' Unreliability estimation and normalized mean intensities (MI) scores calculation
-#' for Infinium type II probes on the Illumina MethylationEPIC microarray v1.0
+#' for Infinium probes on the Illumina MethylationEPIC microarray v1.0
 #'
 #' @aliases unreliability_MI
 #'
@@ -211,7 +211,7 @@ unreliability_calculation <- function(noise_matrix, samples,green_array, red_arr
 
     ureliability_map_closest_cell_number = (sample_red_adjusted_on_noise %/% grid_step)*n_steps + (sample_green_adjusted_on_noise %/% grid_step) + 1
     sample_probes_array$q <- 0
-    sample_probes_array[rownames(s), ]$q <- unreliability_map[ureliability_map_closest_cell_number,]$q
+    sample_probes_array[rownames(sub_sample_probes_array), ]$q <- unreliability_map[ureliability_map_closest_cell_number,]$q
     unreliability_array <- cbind(unreliability_array, sample_probes_array$q)
 
   }
