@@ -30,7 +30,7 @@ library(epicMI)
 RGset <- read.metharray.exp(targets)
 ```
 
-### *p-noise* method on probes II Type
+### *p-noise* method on probes type II  
 ``` r
 out <- unreliability_MI(probes, RGset, noise_set,samples, grid_max_intenisty, grid_step, number_beta_generated)
 ```
@@ -56,7 +56,7 @@ out <- unreliability_MI(probesII_EPICv1, RGset, noise_set="p", samples),
 ```
 where samples names should be the same as in RGset.
 
-### *Y-noise* method on probes II Type
+### *Y-noise* method on probes probes type II
 
 For using *Y-noise* method here are 2 options to run *unreliability_MI* function:
 ``` r
@@ -82,7 +82,7 @@ out <- unreliability_MI(subset(probesII_EPICv1,probesII_EPICv1$removed_to_EPICv2
 We additionaly show, that all 4 options (using *p-noise* and *Y-noise* on probesII_EPICv1 or only on not removed probes work pretty simillar in terms of dependence of estimated unreliability and MI of probes :
 <img src="data/fig/unreliability_vs_MI.png" width="700"/>
 
-### Probes I Type
+### Probes probes type I
 This method, can be used for calculation on probes type I, just by changing (in examples above) dataframe **probesII_EPICv1** to dataframe **probesI_EPICv1** (which will also loaded with package) or own dataframe of probes type I, which should have the same structure and at least have *'probe'* column (name of probes) and *'CHR'* column (with chromosome annotation). 
 As shown on figure below the unreliability scores calculated by different option on probes type I not quite robust, therefore we recommend use only MI and apply the same threshold by it, which was established by probes type II.
 
