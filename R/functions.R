@@ -183,7 +183,7 @@ unreliability_map_estimation <- function(noise_matrix, grid_max_intenisty, grid_
   return(unreliability_map)
 }
 
-unreliability_calculation <- function(noise_matrix, samples,green_array, red_array,probes,unreliability_map, grid_max_intenisty, grid_step) {
+unreliability_calculation <- function(noise_matrix, samples, green_array, red_array, probes, unreliability_map, grid_max_intenisty, grid_step) {
 
   if (!requireNamespace("stringr", quietly = TRUE)) stop("Package stringr must be installed to use this function.", call. = FALSE)
 
@@ -209,16 +209,16 @@ unreliability_calculation <- function(noise_matrix, samples,green_array, red_arr
     sample_red_adjusted_on_noise <- ifelse(sub_sample_probes_array$red - mean_red_noise < 0, 0, sub_sample_probes_array$red - mean_red_noise)
     sample_green_adjusted_on_noise <- ifelse(sub_sample_probes_array$green - mean_green_noise < 0, 0, sub_sample_probes_array$green - mean_green_noise)
 
-    ureliability_map_closest_cell_number = (sample_red_adjusted_on_noise %/% grid_step)*n_steps + (sample_green_adjusted_on_noise %/% grid_step) + 1
+    reliability_map_closest_cell_number = (sample_red_adjusted_on_noise %/% grid_step)*n_steps + (sample_green_adjusted_on_noise %/% grid_step) + 1
     sample_probes_array$q <- 0
-    sample_probes_array[rownames(sub_sample_probes_array), ]$q <- unreliability_map[ureliability_map_closest_cell_number,]$q
+    sample_probes_array[rownames(sub_sample_probes_array), ]$q <- unreliability_map[reliability_map_closest_cell_number,]$q
     unreliability_array <- cbind(unreliability_array, sample_probes_array$q)
 
   }
   colnames(unreliability_array) <- c("cg", samples)
   rownames(unreliability_array) <- probes_names
 
-  probes_unreliability<- apply(unreliability_array[2:ncol(unreliability_array)], 1, function(x) mean(x, na.rm=T))
+  probes_unreliability <- apply(unreliability_array[2:ncol(unreliability_array)], 1, function(x) mean(x, na.rm=T))
   return(probes_unreliability)
 }
 
