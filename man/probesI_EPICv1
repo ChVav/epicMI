@@ -1,0 +1,23 @@
+\name{probesI_EPICv1}
+\alias{probesI_EPICv1}
+\docType{data}
+\title{
+Basic annotation of Infinium Type I probes on Illumina MethylationEPICv1.0 microarray.
+}
+\description{
+Basic annotation of Infinium Type I probes on Illumina MethylationEPICv1.0 microarray. 
+For these probes the MI and unreliability scores can be calculated by unreliability_MI().
+}
+\usage{data("probesI_EPICv1")}
+\format{
+  A data frame with 142158 observations on the following 2 variables.
+  \describe{
+    \item{\code{probe}}{probe name}
+    \item{\code{CHR}}{targetted chromosome, sourced from original manifest}
+    \item{\code{removed_to_EPICv2}}{"1" probe not on EPIC v2.0, "0" probe also on EPIC v2.0}
+  }
+}
+\references{
+https://support.illumina.com/downloads/infinium-methylationepic-v1-0-product-files.html (Mar 13, 2020)
+}
+\keyword{datasets}
