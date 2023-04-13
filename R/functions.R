@@ -67,50 +67,70 @@ load("./data/probesI_EPICv1.RData")
 #'
 #' @export unreliability_MI
 #'
-unreliability_MI <- function(probes, RGset, noise_set="p", samples, grid_max_intenisty = 5000, grid_step = 100, number_beta_generated = 1000) {
-  rownames(probes) <- probes$probe
+unreliability_MI <- function(RGset, samples, list_of_noise_probes, grid_max_intenisty = 5000, grid_step = 100, number_beta_generated = 1000) {
+
 
   if (!requireNamespace("minfi", quietly = TRUE)) stop("Package minfi must be installed to use this function.", call. = FALSE)
+
+  now <- Sys.time()
+  print("Start...")
+
+  probesI <- minfi::getProbeInfo(RGset, type = 'I')$Name
+  probesII <- minfi::getProbeInfo(RGset, type = 'II')$Name
 
   MSet <- minfi::preprocessRaw(RGset)
   green_array <- minfi::getMeth(MSet)
   red_array <- minfi::getUnmeth(MSet)
 
-  common_probes <- intersect(rownames(green_array), as.vector(probes$probe))
-  probes <- probes[common_probes, ]
-
-  if(missing(samples)) samples <- colnames(green_array)
-
-  now <- Sys.time()
-  print("Start...")
-  if(noise_set == "Y") {
-    noise_probes <- rownames(subset(probes, probes$CHR == "Y"))
+  if(missing(samples)) {
+    samples <- colnames(green_array)
   } else {
-    if(noise_set == "p") {
-      print("p-value calculating...")
-      detP_rgset <- minfi::detectionP(RGset, type = "m+u")
-      pvalue_array <- data.frame(detP_rgset)
-      if(length(intersect(samples, colnames(pvalue_array))) != 0) {
-        countp_001 <- apply(pvalue_array[, samples], 1, function(x) sum(x > 0.01) / length(x))
-      }
-      if(length(intersect(paste0("X", samples), colnames(pvalue_array))) != 0) {
-        countp_001 <- apply(pvalue_array[, paste0("X", samples)], 1, function(x) sum(x > 0.01) / length(x))
-      }
-      noise_probes <- intersect(names(countp_001[countp_001 >= 0.5]), as.vector(probes$probe))
-    } else {
-      stop("Please, select CORRECT method of noise probes selection: p -- by p-value; Y -- by Y chromosomes probes (applicable only for female samples)", call. = FALSE)
+    if (length(intersect(samples, colnames(green_array))) == 0) stop("Loaded samples do not match by names with GREEN and RED arrays column names", call. = FALSE)
+  }
+
+  if(missing(list_of_noise_probes)) {
+    print("p-value calculating...")
+    detP_rgset <- minfi::detectionP(RGset, type = "m+u")
+    pvalue_array <- data.frame(detP_rgset)
+    if(length(intersect(samples, colnames(pvalue_array))) != 0) {
+      countp_001 <- apply(pvalue_array[, samples], 1, function(x) sum(x > 0.01) / length(x))
+    }
+    if(length(intersect(paste0("X", samples), colnames(pvalue_array))) != 0) {
+      countp_001 <- apply(pvalue_array[, paste0("X", samples)], 1, function(x) sum(x > 0.01) / length(x))
+    }
+    noise_probes <- names(countp_001[countp_001 >= 0.5])
+  } else {
+    noise_probes <- list_of_noise_probes
+    if (length(noise_probes) == 0) {
+      stop("0 noise probes were detected. Please, check your list_of_noise_probes", call. = FALSE)
     }
   }
+  print(str_c(length(intersect(noise_probes, probesI)), " type I and ",length(intersect(noise_probes, probesII))," type II probes will be used for noise estimation"))
 
-  if (length(intersect(samples, colnames(green_array))) == 0) stop("Loaded samples do not match by names with GREEN and RED arrays column names", call. = FALSE)
+  results_on_typeI <- specific_type_probe_calculation(noise_probes, "I", noise_matrix, grid_max_intenisty, grid_step, number_beta_generated, probesI, probesII, green_array, red_array)
+  results_on_typeII <- specific_type_probe_calculation(noise_probes, "II", noise_matrix, grid_max_intenisty, grid_step, number_beta_generated, probesI, probesII, green_array, red_array)
 
+  probes <- rbind(results_on_typeI, results_on_typeII)
+  print("*Finish*")
+  print(str_c("Time: ", Sys.time() - now))
+  return(probes)
+}
+
+specific_type_probe_calculation <- function(noise_probes, type_of_probes, noise_matrix, grid_max_intenisty, grid_step, number_beta_generated, probesI, probesII, green_array, red_array) {
+  if(type_of_probes == "I") {
+    probes <- data.frame(probe = probesI, type_of_probe = "I")
+    rownames(probes) <- probesI
+  }
+  if(type_of_probes == "II") {
+    probes <- data.frame(probe = probesII, type_of_probe = "II")
+    rownames(probes) <- probesII
+  }
+  noise_probes <- intersect(noise_probes, as.vector(probes$probe))
   if (length(noise_probes) == 0) {
-    stop("0 noise probes were detected. Please, check you probes data frame (it should contain the maximum possible set of probes of the used array).", call. = FALSE)
-  } else {
-    print(str_c(length(noise_probes), " probes will be used for noise estimation"))
+    stop(str_c("Results can not be calculatated for type ",type_of_probes," probes, because number of probes is 0", call. = FALSE)
   }
 
-  noise_probes <- intersect(noise_probes, as.vector(probes$probe))
+  print(str_c("Calculation for type ",type_of_probes,"..."))
   noise_probes_df <- probes[noise_probes, ]
   noise_probes_df$mean_green <- apply(green_array[noise_probes, samples], 1, function(x) mean(x, na.rm = T))
   noise_probes_df$mean_red <- apply(red_array[noise_probes, samples], 1, function(x) mean(x, na.rm = T))
@@ -130,19 +150,14 @@ unreliability_MI <- function(probes, RGset, noise_set="p", samples, grid_max_int
   }
 
   unreliability_map <- unreliability_map_estimation(noise_matrix, grid_max_intenisty, grid_step, number_beta_generated)
-  print("Probes unreliability calculation ...")
+  print(str_c("...type ",type_of_probes," probes unreliability calculation ...")
   unreliability <- unreliability_calculation(noise_matrix, samples, green_array, red_array, probes, unreliability_map, grid_max_intenisty, grid_step)
   probes$unreliability <- unreliability
 
-  print("MI calculating...")
+  print(str_c("...type ",type_of_probes, "probes MI calculating..."))
   probes <- get_MI(probes, green_array, red_array, samples)
-
-  print("*Finish*")
-  print(str_c("Time: ", Sys.time() - now))
   return(probes)
 }
-
-
 
 unreliability_map_estimation <- function(noise_matrix, grid_max_intenisty, grid_step, number_beta_generated) {
 
