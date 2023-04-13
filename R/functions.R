@@ -107,8 +107,8 @@ unreliability_MI <- function(RGset, samples, list_of_noise_probes, grid_max_inte
   }
   print(str_c(length(intersect(noise_probes, probesI)), " type I and ",length(intersect(noise_probes, probesII))," type II probes will be used for noise estimation"))
 
-  results_on_typeI <- specific_type_probe_calculation(noise_probes, "I", noise_matrix, grid_max_intenisty, grid_step, number_beta_generated, probesI, probesII, green_array, red_array)
-  results_on_typeII <- specific_type_probe_calculation(noise_probes, "II", noise_matrix, grid_max_intenisty, grid_step, number_beta_generated, probesI, probesII, green_array, red_array)
+  results_on_typeI <- specific_type_probe_calculation(noise_probes, "I", grid_max_intenisty, grid_step, number_beta_generated, probesI, probesII, green_array, red_array)
+  results_on_typeII <- specific_type_probe_calculation(noise_probes, "II", grid_max_intenisty, grid_step, number_beta_generated, probesI, probesII, green_array, red_array)
 
   probes <- rbind(results_on_typeI, results_on_typeII)
   print("*Finish*")
