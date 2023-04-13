@@ -141,7 +141,7 @@ specific_type_probe_calculation <- function(noise_probes, type_of_probes, sample
 
   green_noise <- green_array[selected_noise_probes, samples]
   red_noise <- red_array[selected_noise_probes, samples]
-
+  print(green_noise)
   noise_matrix <- data.frame()
   for(i in 1:length(selected_noise_probes)) {
     temp <- rbind(data.frame(type="green", noise = as.vector(t(green_noise[selected_noise_probes[i], ]))),
