@@ -116,7 +116,7 @@ unreliability_MI <- function(RGset, samples, list_of_noise_probes, grid_max_inte
   return(probes)
 }
 
-specific_type_probe_calculation <- function(noise_probes, type_of_probes, noise_matrix, grid_max_intenisty, grid_step, number_beta_generated, probesI, probesII, green_array, red_array) {
+specific_type_probe_calculation <- function(noise_probes, type_of_probes, samples, noise_matrix, grid_max_intenisty, grid_step, number_beta_generated, probesI, probesII, green_array, red_array) {
   if(type_of_probes == "I") {
     probes <- data.frame(probe = probesI, type_of_probe = "I")
     rownames(probes) <- probesI
@@ -127,7 +127,7 @@ specific_type_probe_calculation <- function(noise_probes, type_of_probes, noise_
   }
   noise_probes <- intersect(noise_probes, as.vector(probes$probe))
   if (length(noise_probes) == 0) {
-    stop(str_c("Results can not be calculatated for type ",type_of_probes," probes, because number of probes is 0", call. = FALSE)
+    stop(str_c("Results can not be calculatated for type ",type_of_probes," probes, because number of probes is 0", call. = FALSE))
   }
 
   print(str_c("Calculation for type ",type_of_probes,"..."))
@@ -150,7 +150,7 @@ specific_type_probe_calculation <- function(noise_probes, type_of_probes, noise_
   }
 
   unreliability_map <- unreliability_map_estimation(noise_matrix, grid_max_intenisty, grid_step, number_beta_generated)
-  print(str_c("...type ",type_of_probes," probes unreliability calculation ...")
+  print(str_c("...type ",type_of_probes," probes unreliability calculation ..."))
   unreliability <- unreliability_calculation(noise_matrix, samples, green_array, red_array, probes, unreliability_map, grid_max_intenisty, grid_step)
   probes$unreliability <- unreliability
 
