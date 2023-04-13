@@ -116,7 +116,7 @@ unreliability_MI <- function(RGset, samples, list_of_noise_probes, grid_max_inte
   return(probes)
 }
 
-specific_type_probe_calculation <- function(noise_probes, type_of_probes, samples, noise_matrix, grid_max_intenisty, grid_step, number_beta_generated, probesI, probesII, green_array, red_array) {
+specific_type_probe_calculation <- function(noise_probes, type_of_probes, samples, grid_max_intenisty, grid_step, number_beta_generated, probesI, probesII, green_array, red_array) {
   if(type_of_probes == "I") {
     probes <- data.frame(probe = probesI, type_of_probe = "I")
     rownames(probes) <- probesI
