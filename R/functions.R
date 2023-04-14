@@ -75,8 +75,15 @@ unreliability_MI <- function(RGset, samples, list_of_noise_probes, grid_max_inte
   now <- Sys.time()
   print("Start...")
 
-  probesI <- minfi::getProbeInfo(RGset, type = 'I')$Name
   probesII <- minfi::getProbeInfo(RGset, type = 'II')$Name
+
+  probesI_green <- minfi::getProbeInfo(RGset, type = 'I-Green')$Name
+  probesI_red<- minfi::getProbeInfo(RGset, type = 'I-Red')$Name
+
+  probes <- rbind(data.frame(probe = probesI_green, channel = "green", type_of_probe = "I"),
+                  data.frame(probe = probesI_red, channel = "red", type_of_probe = "I"),
+                  data.frame(probe = probesII, channel = "", type_of_probe = "II"))
+  rownames(probes) <- probes$probe
 
   MSet <- minfi::preprocessRaw(RGset)
   green_array <- minfi::getMeth(MSet)
@@ -105,10 +112,25 @@ unreliability_MI <- function(RGset, samples, list_of_noise_probes, grid_max_inte
       stop("0 noise probes were detected. Please, check your list_of_noise_probes", call. = FALSE)
     }
   }
-  print(str_c(length(intersect(noise_probes, probesI)), " type I and ",length(intersect(noise_probes, probesII))," type II probes will be used for noise estimation"))
+  noise_probes_df <- probes[noise_probes,]
 
-  results_on_typeI <- specific_type_probe_calculation(noise_probes, "I", samples, grid_max_intenisty, grid_step, number_beta_generated, probesI, probesII, green_array, red_array)
-  results_on_typeII <- specific_type_probe_calculation(noise_probes, "II", samples, grid_max_intenisty, grid_step, number_beta_generated, probesI, probesII, green_array, red_array)
+  green_noise <- green_array[c(subset(noise_probes_df, noise_probes_df$type_of_probe == "II")$probe,
+                               subset(noise_probes_df, noise_probes_df$type_of_probe == "I" & noise_probes_df$channel == "green")$probe), samples]
+  red_noise <- red_array[c(subset(noise_probes_df, noise_probes_df$type_of_probe == "II")$probe,
+                               subset(noise_probes_df, noise_probes_df$type_of_probe == "I" & noise_probes_df$channel == "red")$probe), samples]
+
+  green_noise_df <- data.frame(x=unlist(green_noise))
+  red_noise_df <- data.frame(x=unlist(red_noise))
+
+  selected_green_noise <- green_noise_df$x[green_noise_df$x < 2 * density(green_noise_df$x)$x[which.max(density(green_noise_df$x)$y)]]
+  selected_red_noise <- red_noise_df$x[red_noise_df$x < 2 * density(red_noise_df$x)$x[which.max(density(red_noise_df$x)$y)]]
+
+  noise_matrix <- rbind(data.frame(type = "green", noise = selected_green_noise),
+                        data.frame(type = "red", noise = selected_red_noise))
+
+  results_on_typeI_green <- specific_type_probe_calculation(noise_matrix, "I-green", samples, grid_max_intenisty, grid_step, number_beta_generated, probesI_green, green_array, red_array)
+  results_on_typeI_red <- specific_type_probe_calculation(noise_matrix, "I-red", samples, grid_max_intenisty, grid_step, number_beta_generated, probesI_red, green_array, red_array)
+  results_on_typeII <- specific_type_probe_calculation(noise_matrix, "II", samples, grid_max_intenisty, grid_step, number_beta_generated, probesII, green_array, red_array)
 
   probes <- rbind(results_on_typeI, results_on_typeII)
   print("*Finish*")
@@ -116,53 +138,46 @@ unreliability_MI <- function(RGset, samples, list_of_noise_probes, grid_max_inte
   return(probes)
 }
 
-specific_type_probe_calculation <- function(noise_probes, type_of_probes, samples, grid_max_intenisty, grid_step, number_beta_generated, probesI, probesII, green_array, red_array) {
-  if(type_of_probes == "I") {
-    probes <- data.frame(probe = probesI, type_of_probe = "I")
-    rownames(probes) <- probesI
+specific_type_probe_calculation <- function(noise_matrix, type_of_probes, samples, grid_max_intenisty, grid_step, number_beta_generated, probe_names, green_array, red_array) {
+  if(type_of_probes == "I-green") {
+    probes <- data.frame(probe = probe_names, channel = "green", type_of_probe = "I")
+    rownames(probes) <- probes$probe
+  }
+  if(type_of_probes == "I-red") {
+    probes <- data.frame(probe = probe_names, channel = "red", type_of_probe = "I")
+    rownames(probes) <- probes$probe
   }
   if(type_of_probes == "II") {
-    probes <- data.frame(probe = probesII, type_of_probe = "II")
+    probes <- data.frame(probe = probesII, channel = "", type_of_probe = "II")
     rownames(probes) <- probesII
   }
-  noise_probes <- intersect(noise_probes, as.vector(probes$probe))
-  if (length(noise_probes) == 0) {
-    stop(str_c("Results can not be calculatated for type ",type_of_probes," probes, because number of probes is 0", call. = FALSE))
-  }
 
-  print(str_c("Calculation for type ",type_of_probes,"..."))
-  # noise_probes_df <- probes[noise_probes, ]
-  # noise_probes_df$mean_green <- apply(green_array[noise_probes, samples], 1, function(x) mean(x, na.rm = T))
-  # noise_probes_df$mean_red <- apply(red_array[noise_probes, samples], 1, function(x) mean(x, na.rm = T))
-  #
-  # noise_probes_common_intensity <- noise_probes_df$mean_green + noise_probes_df$mean_red
-  # names(noise_probes_common_intensity) <- noise_probes
-  # selected_noise_probes <- names(noise_probes_common_intensity[noise_probes_common_intensity < 2 * density(noise_probes_common_intensity)$x[which.max(density(noise_probes_common_intensity)$y)]])
-  selected_noise_probes <- noise_probes
-  green_noise <- green_array[selected_noise_probes, samples]
-  red_noise <- red_array[selected_noise_probes, samples]
+  print(str_c("Calculation for type ", type_of_probes,"..."))
 
-  noise_matrix <- data.frame()
-  for(i in 1:length(selected_noise_probes)) {
-    temp <- rbind(data.frame(type="green", noise = as.vector(t(green_noise[selected_noise_probes[i], ]))),
-                  data.frame(type="red", noise = as.vector(t(red_noise[selected_noise_probes[i], ]))))
-    noise_matrix <- rbind(noise_matrix, temp)
-  }
-
-  unreliability_map <- unreliability_map_estimation(noise_matrix, grid_max_intenisty, grid_step, number_beta_generated)
+  unreliability_map <- unreliability_map_estimation(noise_matrix, type_of_probes, grid_max_intenisty, grid_step, number_beta_generated)
   print(str_c("...type ",type_of_probes," probes unreliability calculation ..."))
-  unreliability <- unreliability_calculation(noise_matrix, samples, green_array, red_array, probes, unreliability_map, grid_max_intenisty, grid_step)
+  unreliability <- unreliability_calculation(noise_matrix, type_of_probes, samples, green_array, red_array, probes, unreliability_map, grid_max_intenisty, grid_step)
   probes$unreliability <- unreliability
 
-  print(str_c("...type ",type_of_probes, "probes MI calculating..."))
+  print(str_c("...type ",type_of_probes, " probes MI calculating..."))
   probes <- get_MI(probes, green_array, red_array, samples)
   return(probes)
 }
 
-unreliability_map_estimation <- function(noise_matrix, grid_max_intenisty, grid_step, number_beta_generated) {
+unreliability_map_estimation <- function(noise_matrix, type_of_probes, grid_max_intenisty, grid_step, number_beta_generated) {
 
-  noise_green <- subset(noise_matrix, noise_matrix$type == "green")
-  noise_red <- subset(noise_matrix, noise_matrix$type == "red")
+  if(type_of_probes == "I-green") {
+    noise_green <- subset(noise_matrix, noise_matrix$type == "green")
+    noise_red <- subset(noise_matrix, noise_matrix$type == "green")
+  }
+  if(type_of_probes == "I-red") {
+    noise_green <- subset(noise_matrix, noise_matrix$type == "red")
+    noise_red <- subset(noise_matrix, noise_matrix$type == "red")
+  }
+  if(type_of_probes == "II") {
+    noise_green <- subset(noise_matrix, noise_matrix$type == "green")
+    noise_red <- subset(noise_matrix, noise_matrix$type == "red")
+  }
 
   red_grid <- seq(0, grid_max_intenisty, grid_step)
   green_grid <- seq(0, grid_max_intenisty, grid_step)
@@ -174,9 +189,10 @@ unreliability_map_estimation <- function(noise_matrix, grid_max_intenisty, grid_
     for(j in 1:length(green_grid)) {
       red = red_grid[i]
       green = green_grid[j]
-      noise_number <- sample(1:nrow(noise_green), number_beta_generated)
-      noised_green = noise_green[noise_number, ]$noise + green
-      noised_red = noise_red[noise_number, ]$noise + red
+      noise_number_green <- sample(1:nrow(noise_green), number_beta_generated)
+      noise_number_red <- sample(1:nrow(noise_red), number_beta_generated)
+      noised_green = noise_green[noise_number_green, ]$noise + green
+      noised_red = noise_red[noise_number_red, ]$noise + red
       beta_temp <- (noised_green) / (noised_green + noised_red)
       beta_generator <- rbind(beta_generator, data.frame(i, j, red, green, mean(noised_green), mean(noised_red), t(beta_temp)))
     }
@@ -198,12 +214,22 @@ unreliability_map_estimation <- function(noise_matrix, grid_max_intenisty, grid_
   return(unreliability_map)
 }
 
-unreliability_calculation <- function(noise_matrix, samples, green_array, red_array, probes, unreliability_map, grid_max_intenisty, grid_step) {
+unreliability_calculation <- function(noise_matrix, type_of_probes, samples, green_array, red_array, probes, unreliability_map, grid_max_intenisty, grid_step) {
 
   if (!requireNamespace("stringr", quietly = TRUE)) stop("Package stringr must be installed to use this function.", call. = FALSE)
 
-  mean_green_noise <- mean(subset(noise_matrix, noise_matrix$type == "green")$noise)
-  mean_red_noise <- mean(subset(noise_matrix, noise_matrix$type == "red")$noise)
+  if(type_of_probes == "I-green") {
+    mean_green_noise <- mean(subset(noise_matrix, noise_matrix$type == "green")$noise)
+    mean_red_noise <- mean(subset(noise_matrix, noise_matrix$type == "green")$noise)
+  }
+  if(type_of_probes == "I-red") {
+    mean_green_noise <- mean(subset(noise_matrix, noise_matrix$type == "red")$noise)
+    mean_red_noise <- mean(subset(noise_matrix, noise_matrix$type == "red")$noise)
+  }
+  if(type_of_probes == "II") {
+    mean_green_noise <- mean(subset(noise_matrix, noise_matrix$type == "green")$noise)
+    mean_red_noise <- mean(subset(noise_matrix, noise_matrix$type == "red")$noise)
+  }
 
   probes_names <- as.vector(probes$probe)
   unreliability_array <-data.frame(cg = probes_names)
