@@ -132,7 +132,7 @@ unreliability_MI <- function(RGset, samples, list_of_noise_probes, grid_max_inte
   results_on_typeI_red <- specific_type_probe_calculation(noise_matrix, "I-red", samples, grid_max_intenisty, grid_step, number_beta_generated, probesI_red, green_array, red_array)
   results_on_typeII <- specific_type_probe_calculation(noise_matrix, "II", samples, grid_max_intenisty, grid_step, number_beta_generated, probesII, green_array, red_array)
 
-  probes <- rbind(results_on_typeI, results_on_typeII)
+  probes <- rbind(results_on_typeI_green, results_on_typeI_red,results_on_typeII)
   print("*Finish*")
   print(str_c("Time: ", Sys.time() - now))
   return(probes)
