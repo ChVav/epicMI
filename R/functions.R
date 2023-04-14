@@ -131,14 +131,14 @@ specific_type_probe_calculation <- function(noise_probes, type_of_probes, sample
   }
 
   print(str_c("Calculation for type ",type_of_probes,"..."))
-  noise_probes_df <- probes[noise_probes, ]
-  noise_probes_df$mean_green <- apply(green_array[noise_probes, samples], 1, function(x) mean(x, na.rm = T))
-  noise_probes_df$mean_red <- apply(red_array[noise_probes, samples], 1, function(x) mean(x, na.rm = T))
-
-  noise_probes_common_intensity <- noise_probes_df$mean_green + noise_probes_df$mean_red
-  names(noise_probes_common_intensity) <- noise_probes
-  selected_noise_probes <- names(noise_probes_common_intensity[noise_probes_common_intensity < 2 * density(noise_probes_common_intensity)$x[which.max(density(noise_probes_common_intensity)$y)]])
-
+  # noise_probes_df <- probes[noise_probes, ]
+  # noise_probes_df$mean_green <- apply(green_array[noise_probes, samples], 1, function(x) mean(x, na.rm = T))
+  # noise_probes_df$mean_red <- apply(red_array[noise_probes, samples], 1, function(x) mean(x, na.rm = T))
+  #
+  # noise_probes_common_intensity <- noise_probes_df$mean_green + noise_probes_df$mean_red
+  # names(noise_probes_common_intensity) <- noise_probes
+  # selected_noise_probes <- names(noise_probes_common_intensity[noise_probes_common_intensity < 2 * density(noise_probes_common_intensity)$x[which.max(density(noise_probes_common_intensity)$y)]])
+  selected_noise_probes <- noise_probes
   green_noise <- green_array[selected_noise_probes, samples]
   red_noise <- red_array[selected_noise_probes, samples]
 
