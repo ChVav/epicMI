@@ -119,9 +119,10 @@ unreliability_MI <- function(RGset, samples, list_of_noise_probes, grid_max_inte
   red_noise <- red_array[c(subset(noise_probes_df, noise_probes_df$type_of_probe == "II")$probe,
                                subset(noise_probes_df, noise_probes_df$type_of_probe == "I" & noise_probes_df$channel == "red")$probe), samples]
 
-  green_noise_df <- data.frame(x=unlist(green_noise))
-  red_noise_df <- data.frame(x=unlist(red_noise))
+  green_noise_df <- data.frame(x=as.numeric(unlist(green_noise)))
+  red_noise_df <- data.frame(x=as.numeric(unlist(red_noise)))
 
+  print(green_noise_df$x)
   selected_green_noise <- green_noise_df$x[green_noise_df$x < 2 * density(green_noise_df$x)$x[which.max(density(green_noise_df$x)$y)]]
   selected_red_noise <- red_noise_df$x[red_noise_df$x < 2 * density(red_noise_df$x)$x[which.max(density(red_noise_df$x)$y)]]
 
