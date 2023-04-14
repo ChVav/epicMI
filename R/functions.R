@@ -67,7 +67,7 @@ load("./data/probesI_EPICv1.RData")
 #'
 #' @export unreliability_MI
 #'
-unreliability_MI <- function(RGset, samples, list_of_noise_probes, grid_max_intenisty = 5000, grid_step = 100, number_beta_generated = 1000) {
+unreliability_MI_1 <- function(RGset, samples, list_of_noise_probes, grid_max_intenisty = 5000, grid_step = 100, number_beta_generated = 1000) {
 
 
   if (!requireNamespace("minfi", quietly = TRUE)) stop("Package minfi must be installed to use this function.", call. = FALSE)
@@ -122,7 +122,6 @@ unreliability_MI <- function(RGset, samples, list_of_noise_probes, grid_max_inte
   green_noise_df <- data.frame(x=as.numeric(unlist(green_noise)))
   red_noise_df <- data.frame(x=as.numeric(unlist(red_noise)))
 
-  print(green_noise_df$x)
   selected_green_noise <- green_noise_df$x[green_noise_df$x < 2 * density(green_noise_df$x)$x[which.max(density(green_noise_df$x)$y)]]
   selected_red_noise <- red_noise_df$x[red_noise_df$x < 2 * density(red_noise_df$x)$x[which.max(density(red_noise_df$x)$y)]]
 
