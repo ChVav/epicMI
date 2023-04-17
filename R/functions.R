@@ -67,7 +67,7 @@ load("./data/probesI_EPICv1.RData")
 #'
 #' @export unreliability_MI
 #'
-unreliability_MI <- function(RGset, samples, list_of_noise_probes, grid_max_intenisty = 5000, grid_step = 100, number_beta_generated = 1000) {
+unreliability_MI_1 <- function(RGset, samples, list_of_noise_probes, grid_max_intenisty = 5000, grid_step = 100, number_beta_generated = 1000) {
 
 
   if (!requireNamespace("minfi", quietly = TRUE)) stop("Package minfi must be installed to use this function.", call. = FALSE)
@@ -139,6 +139,7 @@ unreliability_MI <- function(RGset, samples, list_of_noise_probes, grid_max_inte
 }
 
 specific_type_probe_calculation <- function(noise_matrix, type_of_probes, samples, grid_max_intenisty, grid_step, number_beta_generated, probe_names, green_array, red_array) {
+  #probe_names <- intersect(probe_names, rownames(green_array))
   if(type_of_probes == "I-green") {
     probes <- data.frame(probe = probe_names, channel = "green", type_of_probe = "I")
     rownames(probes) <- probes$probe
@@ -148,14 +149,15 @@ specific_type_probe_calculation <- function(noise_matrix, type_of_probes, sample
     rownames(probes) <- probes$probe
   }
   if(type_of_probes == "II") {
-    probes <- data.frame(probe = probesII, channel = "", type_of_probe = "II")
-    rownames(probes) <- probesII
+    probes <- data.frame(probe = probe_names, channel = "", type_of_probe = "II")
+    rownames(probes) <- probes$probe
   }
 
   print(str_c("Calculation for type ", type_of_probes,"..."))
 
   unreliability_map <- unreliability_map_estimation(noise_matrix, type_of_probes, grid_max_intenisty, grid_step, number_beta_generated)
   print(str_c("...type ",type_of_probes," probes unreliability calculation ..."))
+
   unreliability <- unreliability_calculation(noise_matrix, type_of_probes, samples, green_array, red_array, probes, unreliability_map, grid_max_intenisty, grid_step)
   probes$unreliability <- unreliability
 
@@ -232,18 +234,19 @@ unreliability_calculation <- function(noise_matrix, type_of_probes, samples, gre
   }
 
   probes_names <- as.vector(probes$probe)
+
   unreliability_array <-data.frame(cg = probes_names)
 
   n_steps = length(seq(0, grid_max_intenisty, grid_step))
 
   for(i in 1:length(samples)) {
+    sample = samples[i]
     print(stringr::str_c("sample ", i, "/", length(samples)))
 
-    sample <- samples[i]
-
     sample_probes_array <- probes
-    sample_probes_array$green = as.vector(t(green_array[probes_names, sample]))
-    sample_probes_array$red = as.vector(t(red_array[probes_names, sample]))
+
+    sample_probes_array$green = as.vector(green_array[probes_names, sample])
+    sample_probes_array$red = as.vector(red_array[probes_names, sample])
 
     sub_sample_probes_array <- subset(sample_probes_array, sample_probes_array$green < grid_max_intenisty & sample_probes_array$red < grid_max_intenisty)
 
