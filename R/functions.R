@@ -67,7 +67,7 @@ load("./data/probesI_EPICv1.RData")
 #'
 #' @export unreliability_MI
 #'
-unreliability_MI_1 <- function(RGset, samples, list_of_noise_probes, grid_max_intenisty = 5000, grid_step = 100, number_beta_generated = 1000) {
+unreliability_MI <- function(RGset, samples, list_of_noise_probes, grid_max_intenisty = 5000, grid_step = 100, number_beta_generated = 1000) {
 
 
   if (!requireNamespace("minfi", quietly = TRUE)) stop("Package minfi must be installed to use this function.", call. = FALSE)
