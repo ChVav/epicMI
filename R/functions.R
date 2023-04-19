@@ -67,7 +67,7 @@ load("./data/probesI_EPICv1.RData")
 #'
 #' @export unreliability_MI
 #'
-unreliability_MI <- function(RGset, samples, list_of_noise_probes, grid_max_intenisty = 5000, grid_step = 100, number_beta_generated = 1000) {
+unreliability_MI <- function(RGset, samples, grid_max_intenisty = 5000, grid_step = 100, number_beta_generated = 1000) {
 
 
   if (!requireNamespace("minfi", quietly = TRUE)) stop("Package minfi must be installed to use this function.", call. = FALSE)
@@ -95,35 +95,24 @@ unreliability_MI <- function(RGset, samples, list_of_noise_probes, grid_max_inte
     if (length(intersect(samples, colnames(green_array))) == 0) stop("Loaded samples do not match by names with GREEN and RED arrays column names", call. = FALSE)
   }
 
-  if(missing(list_of_noise_probes)) {
-    print("p-value calculating...")
-    detP_rgset <- minfi::detectionP(RGset, type = "m+u")
-    pvalue_array <- data.frame(detP_rgset)
-    if(length(intersect(samples, colnames(pvalue_array))) != 0) {
-      countp_001 <- apply(pvalue_array[, samples], 1, function(x) sum(x > 0.01) / length(x))
-    }
-    if(length(intersect(paste0("X", samples), colnames(pvalue_array))) != 0) {
-      countp_001 <- apply(pvalue_array[, paste0("X", samples)], 1, function(x) sum(x > 0.01) / length(x))
-    }
-    noise_probes <- names(countp_001[countp_001 >= 0.5])
-  } else {
-    noise_probes <- list_of_noise_probes
-    if (length(noise_probes) == 0) {
-      stop("0 noise probes were detected. Please, check your list_of_noise_probes", call. = FALSE)
-    }
-  }
-  noise_probes_df <- probes[noise_probes,]
+  print("Noise from negative control probes extraction...")
 
-  green_noise <- green_array[c(subset(noise_probes_df, noise_probes_df$type_of_probe == "II")$probe,
-                               subset(noise_probes_df, noise_probes_df$type_of_probe == "I" & noise_probes_df$channel == "green")$probe), samples]
-  red_noise <- red_array[c(subset(noise_probes_df, noise_probes_df$type_of_probe == "II")$probe,
-                               subset(noise_probes_df, noise_probes_df$type_of_probe == "I" & noise_probes_df$channel == "red")$probe), samples]
+  probes_control <- minfi::getProbeInfo(RGset, type = 'Control')
+  probes_control <- data.frame(probes_control[2:nrow(probes_control),])
+  probes_control_negative <- subset(probes_control,probes_control$Type == "NEGATIVE")
 
-  green_noise_df <- data.frame(x=as.numeric(unlist(green_noise)))
-  red_noise_df <- data.frame(x=as.numeric(unlist(red_noise)))
 
-  selected_green_noise <- green_noise_df$x[green_noise_df$x < 2 * density(green_noise_df$x)$x[which.max(density(green_noise_df$x)$y)]]
-  selected_red_noise <- red_noise_df$x[red_noise_df$x < 2 * density(red_noise_df$x)$x[which.max(density(red_noise_df$x)$y)]]
+  GREEN_channel <- getGreen(RGset)
+  RED_channel<- getRed(RGset)
+
+  green_n <- intersect(rownames(GREEN_channel), probes_control_negative$Address)
+  red_n <-  intersect(rownames(RED_channel), probes_control_negative$Address)
+
+  green_noise_df_nc <- data.frame(x=as.numeric(unlist(GREEN_channel[green_n,])))
+  red_noise_df_nc <- data.frame(x=as.numeric(unlist(RED_channel[red_n,])))
+
+  selected_green_noise <- green_noise_df_nc$x[green_noise_df_nc$x < quantile(green_noise_df_nc$x, probs = c(0.99))]
+  selected_red_noise <- red_noise_df_nc$x[red_noise_df_nc$x < quantile(red_noise_df_nc$x, probs = c(0.99))]
 
   noise_matrix <- rbind(data.frame(type = "green", noise = selected_green_noise),
                         data.frame(type = "red", noise = selected_red_noise))
