@@ -1,3 +1,6 @@
 export(unreliability_MI)
 import(stringr)
 import(minfi)
+import(dplyr)
+import(ggpubr)
+import(ggplot2)
