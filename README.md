@@ -13,7 +13,8 @@ Illumina MethylationEPIC microarray v1.0, based on "noise" probes, which can be 
 
 ## Requirements
 
-R \>= 3.5.0 <br> minfi \>= 1.42.0 <br> stringr
+R \>= 3.5.0 <br> minfi \>= 1.42.0 <br> stringr <br> dplyr <br> ggpubr <br> ggplot2
+
 
 ## Installation
 
