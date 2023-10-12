@@ -12,7 +12,7 @@ LazyDataCompression: bzip2
 Depends: 
     minfi (>= 1.42.0),
     stringr (>= 1.4.0),
-    stats
-    dplyr
-    ggpubr
+    stats,
+    dplyr,
+    ggpubr,
     ggplot2
