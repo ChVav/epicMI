@@ -25,6 +25,9 @@ Estimate unreliability and MI scores for Infinium probes on the Illumina Methyla
 R >= 3.5.0 <br>
 minfi >= 1.42.0 <br>
 stringr
+dplyr
+ggpubr
+ggplot2
 
 
 ## Installation
