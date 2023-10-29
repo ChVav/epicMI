@@ -39,7 +39,7 @@ with *'grid_step'* = 100 and *'number_beta_generated'* = 1000:
 ``` r
 out <- unreliability_MI(RGset, samples)
 ```
-*Note* Method can be apply to other Illumina Methylation microarrays (450k, EPICv2.0 etc)
+*Note: Method can be apply to other Illumina Methylation microarrays (450k, EPICv2.0 etc)*
 
 
 
