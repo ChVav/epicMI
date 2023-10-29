@@ -45,17 +45,13 @@ with unreliability score (\emph{unreliability} column), with MI (\emph{MI} colum
 }
 \examples{
   ## To run on all samples with default settings:
-
   \dontrun{out <- unreliability_MI(RGset)}
 
-  ## To run on specific subset of \code{samples} ('samples_subset') with default settings:
-
+  ## To run on specific subset of \emph{samples} ('samples_subset') with default settings:
   \dontrun{out <- unreliability_MI(RGset, samples = samples_subset)}
-
-  ## To run with specific values for \code{grid_max_intenisty} or \code{grid_step] or \code{number_beta_generated} ('specific_grid_max_intenisty', 'specific_grid_step' or 'specific_number_beta_generated')
+  ## To run with specific values for \emph{grid_max_intenisty} or \emph{grid_step] or \emph{number_beta_generated} ('specific_grid_max_intenisty', 'specific_grid_step' or 'specific_number_beta_generated')
 
   \dontrun{out <- unreliability_MI(RGset, grid_max_intenisty = specific_grid_max_intenisty, grid_step = specific_grid_step, number_beta_generated = specific_number_beta_generated)}
-  
 }
 \keyword{unreliability}
 \keyword{MI}
