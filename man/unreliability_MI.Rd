@@ -37,11 +37,13 @@ with MI (\emph{MI} column) and with recommendation for exculsion
   Tatiana Nazarenko, Charlotte Vavourakis
 }
 \examples{
-  ## To run on all samples with default settings:
-  \dontrun{out <- unreliability_MI(RGset)}
-
-  ## To run on specific subset of \emph{samples} (samples_subset) with default settings:
-  \dontrun{out <- unreliability_MI(RGset, samples = samples_subset)}
+  \dontrun{
+  # To run on all samples with default settings:
+  out <- unreliability_MI(RGset)
+}
+  \dontrun{
+  # To run on specific subset of \emph{samples} (samples_subset) with default settings:
+  out <- unreliability_MI(RGset, samples = samples_subset)}
 }
 \keyword{unreliability}
 \keyword{MI}
