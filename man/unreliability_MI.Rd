@@ -16,22 +16,22 @@
 }
 \arguments{
   \item{RGset}{minfi RGChannelSet object}
-  \item{samples}{Optional, subset of samples used to estimate all parameters}
+  \item{samples}{(optional) subset of samples used to estimate all parameters (all samples by default)}
   
   * parameters related to the construction of the Reliability Map *
-  \item{grid_max_intenisty}{Maximum value of artificial intensity (M and U) of Reliability Map grid (5000 by default).} 
+  \item{grid_max_intenisty}{(optional) maximum value of artificial intensity (M and U) of Reliability Map grid (5000 by default).} 
     
-  \item{grid_step}{Reliability Map grid step (of range from 0 to \code{grid_max_intenisty}) (100 by default).} 
+  \item{grid_step}{(optional) reliability Map grid step (of range from 0 to \code{grid_max_intenisty}) (100 by default).} 
     
-  \item{number_beta_generated}{The number of generated beta-values (with noise) that are used to estimate the MAD of
+  \item{number_beta_generated}{(optional) the number of generated beta-values (with noise) that are used to estimate the MAD of
     their distribution (1000 by default) for each M and U pair.} 
   
   \item{RGset}{minfi RGChannelSet object} 
 }
 \value{
-  Return data frame of probes (*'probe'* column) with indiacating their type (*'type_of_probe'* column and *'channel'* column for Type I probes);
-with unreliability score (*'unreliability'* ccolumn), with MI (*'MI'* column) and with recommendation for exculsion 
-(*'recommended_for_exclusion'* with values 1 - if should be ecluded, 0 - if not).
+  Return data frame of probes (\emph{probe} column) with indiacating their type (\emph{type_of_probe} column and \emph{channel} column for Type I probes);
+with unreliability score (\emph{unreliability} column), with MI (\emph{MI} column) and with recommendation for exculsion 
+(\emph{recommended_for_exclusion} with values \emph{1} - if should be ecluded, \emph{0} - if not).
 }
   
 \references{
@@ -45,12 +45,15 @@ with unreliability score (*'unreliability'* ccolumn), with MI (*'MI'* column) an
 }
 \examples{
   ## To run on all samples with default settings:
+
   \dontrun{out <- unreliability_MI(RGset)}
 
-  ## To run on specific subset of *'samples'* ('samples_subset') with default settings:
+  ## To run on specific subset of \code{samples} ('samples_subset') with default settings:
+
   \dontrun{out <- unreliability_MI(RGset, samples = samples_subset)}
 
-  ## To run with specific values for *'grid_max_intenisty'* or *'grid_step'* or *'number_beta_generated'* ('specific_grid_max_intenisty', 'specific_grid_step' or 'specific_number_beta_generated')
+  ## To run with specific values for \code{grid_max_intenisty} or \code{grid_step] or \code{number_beta_generated} ('specific_grid_max_intenisty', 'specific_grid_step' or 'specific_number_beta_generated')
+
   \dontrun{out <- unreliability_MI(RGset, grid_max_intenisty = specific_grid_max_intenisty, grid_step = specific_grid_step, number_beta_generated = specific_number_beta_generated)}
   
 }
