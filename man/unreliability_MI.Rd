@@ -40,10 +40,9 @@ with MI (\emph{MI} column) and with recommendation for exculsion
   \dontrun{
     # To run on all samples with default settings:
     out <- unreliability_MI(RGset)
-  }
-  \dontrun{
+
     # To run on specific subset of samples with default settings:
-    out <- unreliability_MI(RGset, samples = samples_subset)}
+    out <- unreliability_MI(RGset, samples = samples_subset)
   }
 }
 \keyword{unreliability}
