@@ -18,7 +18,7 @@
   \item{RGset}{minfi RGChannelSet object}
   \item{samples}{(optional) subset of samples used to estimate all parameters (all samples by default)}
   
-  * parameters related to the construction of the Reliability Map *
+  \emph{parameters related to the construction of the Reliability Map}
   \item{grid_max_intenisty}{(optional) maximum value of artificial intensity (M and U) of Reliability Map grid (5000 by default).} 
     
   \item{grid_step}{(optional) reliability Map grid step (of range from 0 to \code{grid_max_intenisty}) (100 by default).} 
@@ -49,7 +49,7 @@ with unreliability score (\emph{unreliability} column), with MI (\emph{MI} colum
 
   ## To run on specific subset of \emph{samples} ('samples_subset') with default settings:
   \dontrun{out <- unreliability_MI(RGset, samples = samples_subset)}
-  ## To run with specific values for \emph{grid_max_intenisty} or \emph{grid_step] or \emph{number_beta_generated} ('specific_grid_max_intenisty', 'specific_grid_step' or 'specific_number_beta_generated')
+  ## To run with specific values for \emph{grid_max_intenisty} or \emph{grid_step] or \emph{number_beta_generated} ('specific_grid_max_intenisty' or 'specific_grid_step' or 'specific_number_beta_generated')
 
   \dontrun{out <- unreliability_MI(RGset, grid_max_intenisty = specific_grid_max_intenisty, grid_step = specific_grid_step, number_beta_generated = specific_number_beta_generated)}
 }
