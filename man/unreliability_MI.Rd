@@ -2,7 +2,6 @@
 \alias{unreliability_MI}
 \title{Unreliability estimation and normalized mean intensities (MI) scores calculation 
   for Infinium probes on the Illumina MethylationEPIC microarray v1.0}
-
 \description{
   Estimating probes 'unreliability' scores by simulating the beta-value
   distribution influenced by technical noise (which is getting from Negative Control Probes from Green and Red channels separately) on different levels of M (Methylated) and U (Unmethylated)
@@ -40,7 +39,6 @@ with MI (\emph{MI} column) and with recommendation for exculsion
   \dontrun{
     # To run on all samples with default settings:
     out <- unreliability_MI(RGset)
-
     # To run on specific subset of samples with default settings:
     out <- unreliability_MI(RGset, samples = samples_subset)
   }
