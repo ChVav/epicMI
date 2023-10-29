@@ -20,7 +20,6 @@
   \item{grid_step}{(optional) reliability Map grid step (of range from 0 to \code{grid_max_intenisty}) (100 by default)} 
   \item{number_beta_generated}{(optional) the number of generated beta-values (with noise) that are used to estimate the MAD of
     their distribution (1000 by default) for each M and U pair} 
-
 }
 \value{
   Return data frame of probes (\emph{probe} column) with indiacating their type (\emph{type_of_probe} column 
@@ -28,7 +27,6 @@ and \emph{channel} column for Type I probes); with unreliability score (\emph{un
 with MI (\emph{MI} column) and with recommendation for exculsion 
 (\emph{recommended_for_exclusion} with values \emph{1} - if should be ecluded, \emph{0} - if not).
 }
-  
 \references{
   Nazarenko T, Vavourakis CD, Jones A, Evans A, Watson AW, Brandt K,
   Carter C, Zaikin A, Herzog C, Widschwendter M.
