@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-Estimate unreliability and MI scores for Infinium probes on the Illumina MethylationEPIC microarray v1.0, either using detP values or probes on the Y chromosome.
+Estimates MI, unreliability scores and based on it builds a suggestion for removing low-reliable Infinium probes on the Illumina MethylationEPIC microarray v1.0.
 
 ## Requirements
 
